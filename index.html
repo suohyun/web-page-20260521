@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>예약 페이지</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    button {
+      background: #4285f4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #2f6fe4;
+    }
+
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+    }
+
+    .list {
+      margin-top: 30px;
+    }
+
+    .item {
+      background: #f1f3f6;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>예약 페이지</h1>
+
+    <input type="text" id="name" placeholder="이름 입력">
+
+    <input type="date" id="date">
+
+    <button onclick="saveReservation()">
+      예약하기
+    </button>
+
+    <div class="result" id="result"></div>
+
+    <div class="list" id="reservationList"></div>
+  </div>
+
+  <script>
+    let reservations = JSON.parse(localStorage.getItem('reservations')) || [];
+
+    function saveReservation() {
+      const name = document.getElementById('name').value;
+      const date = document.getElementById('date').value;
+      const result = document.getElementById('result');
+
+      if (!name || !date) {
+        result.innerText = '이름과 날짜를 입력하세요.';
+        result.style.color = 'red';
+        return;
+      }
+
+      const reservation = {
+        name,
+        date
+      };
+
+      reservations.push(reservation);
+
+      localStorage.setItem(
+        'reservations',
+        JSON.stringify(reservations)
+      );
+
+      result.innerText = '예약 완료!';
+      result.style.color = 'green';
+
+      document.getElementById('name').value = '';
+      document.getElementById('date').value = '';
+
+      renderReservations();
+    }
+
+    function renderReservations() {
+      const list = document.getElementById('reservationList');
+
+      list.innerHTML = '';
+
+      reservations.forEach((r, index) => {
+        list.innerHTML += `
+          <div class="item">
+            <strong>${r.name}</strong><br>
+            ${r.date}
+          </div>
+        `;
+      });
+    }
+
+    renderReservations();
+  </script>
+
+</body>
+</html>
